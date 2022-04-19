@@ -1,5 +1,5 @@
 const { fifaData } = require('./fifa.js')
-
+// console.log(fifaData);
 // ⚽️ M  V P ⚽️ //
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 1: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -25,11 +25,13 @@ Use getFinals to do the following:
 
 💡 HINT - you should be looking at the stage key inside of the objects
 */
-
-function getFinals(/* code here */) {
-    /* code here */
+function getFinals(fifArray) {
+    const filteredByTeams = fifArray.filter((teams) => {
+    return  teams.Stage === 'Final';
+  });
+  return filteredByTeams;
  }
-
+// console.log(getFinals(fifaData));
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 3: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -38,10 +40,13 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function as the second parameter that will take getFinals from task 2 as an argument
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(fifArray, getFinalsCb) {
+    const years = getFinalsCb(fifArray).map(date => date.Year);  
+    return years;
 }
-
+// console.log(getYears(fifaData, getFinals));
+/*returning a copy of the getFinals array from task 2 then passing 
+    a function to map simply*/
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -52,9 +57,25 @@ Use the higher-order function getWinners to do the following:
 💡 HINT: Don't worry about ties for now (Please see the README file for info on ties for a stretch goal.)
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(fifArray, getFinalsCb) {
+    const winners = getFinalsCb(fifArray).map(wins => wins['Home Team Goals'] > wins['Away Team Goals'] ?
+    wins['Home Team Name'] : wins['Away Team Name'])
+
+    return winners;
 }
+// console.log(getWinners(fifaData, getFinals));
+/*CODE BREAKDOWN: first we have our HOF with 2 parameters, one for original object and the other for task 2 callback function.
+next we set up our new object called winners. This is equal to our callback function.map and we are mapping what we call wins.
+In this situation since our object key is a string with more than one word, we use bracket notation in place of dot notation.
+The greater than symbol compares our two object keys. 
+The question mark symbol is in place of an if statement. while the colon symbol is in place of an 'else'
+It would be similar to saying: if (wins['Home Team Goals'] > wins['Away Team Goals']) {
+    return wins['Home Team Name'];
+} else {
+    return  wins['Away Team Name'];
+}
+Next we just return our new object called winners 
+Remember to get used to using different notation for different situations, not everything takes the same notation*/
 
 
 
@@ -69,10 +90,14 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(fifArray, getFinalsCb, getYearsCb ,getWinnersCb) {
+    const finalsData = getFinalsCb(fifArray);
+    const winnersData = getWinnersCb(fifArray, getFinals);
+    const yearsData = getYearsCb(fifArray, getFinals);
+    const winnersObject = winnersData.map((winnerName, yearByIndex) => `In ${yearsData[yearByIndex]}, ${winnerName} won the world cup!`);
+    return winnersObject;
 }
-
+console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners));
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
