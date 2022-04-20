@@ -6,17 +6,20 @@ const { fifaData } = require('./fifa.js')
 Practice accessing data by console.log-ing the following pieces of data note. 
 
 💡 HINT: You may want to filter the data first 😉*/
-
+const finals2014 = fifaData.filter((key) => {
+    return key.Year === 2014 && key.Stage === 'Final'
+});
+// console.log(finals2014);
 //(a) Home Team name for 2014 world cup final
-
+// console.log(finals2014[0]['Home Team Name']);
 //(b) Away Team name for 2014 world cup final
-
+// console.log(finals2014[0]['Away Team Name']);
 //(c) Home Team goals for 2014 world cup final
-
+// console.log(finals2014[0]['Home Team Goals']);
 //(d) Away Team goals for 2014 world cup final
-
+// console.log(finals2014[0]['Away Team Goals']);
 //(e) Winner of 2014 world cup final */
-
+// console.log(finals2014[0]['Win conditions']);
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -91,12 +94,14 @@ Use the higher-order function getWinnersByYear to do the following:
  */
 
 function getWinnersByYear(fifArray, getFinalsCb, getYearsCb ,getWinnersCb) {
-    const finalsData = getFinalsCb(fifArray);
     const winnersData = getWinnersCb(fifArray, getFinals);
     const yearsData = getYearsCb(fifArray, getFinals);
     const winnersObject = winnersData.map((winnerName, yearByIndex) => `In ${yearsData[yearByIndex]}, ${winnerName} won the world cup!`);
     return winnersObject;
 }
+/*CODE BREAKDOWN: First our HOF with 4 paramaters, 3 of wich are CB parameters.
+next set up the variables that will be used. The first is declared to pass the test although it is not read
+Next we  apply our paramater getWinnersCb which takes the parameters of an array and the function getFinals*/
 console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners));
 
 
@@ -110,12 +115,27 @@ Use the higher order function getAverageGoals to do the following:
  
  💡 HINT: use .reduce, .toFixed (refer to MDN for syntax), and do this in 2 steps) 
  
- 
+ how to get the average number... I need to add all the home team goals and away team goals together for every match. then I need to
+ divide by the total number of matches and round to the second decimal place.
 */
 
-function getAverageGoals(/* code here */) {
-    /* code here */
+function getAverageGoals(getFinalsCb) {
+    const addData = getFinalsCb.reduce((previousValue, currentvalue) => {
+        return previousValue + currentvalue['Home Team Goals'] + currentvalue['Away Team Goals'];
+    }, 0);
+    return (addData / getFinalsCb.length).toFixed(2);
+
  }
+ /*CODE BREAKDOWN: first step is to set our parameter which needs to be the callback function for getFinals.
+ next step is to set our new variable.
+ now we can use the reduce method. Remember to pass in our callback parameter before our reduce then set up the reduce method like normal
+ Next we have our reduce method setup intially at zero, then we take the previousvalue and add it to the currentvalue of the home team goals
+ key value + the away team goals key value.
+ Once we have that we can return our new variable with that data in it and divide it by the length of the array giving us the number of
+ matches played total.
+ The final step is to fix it to two decimal places using the .toFixed method
+ Now we can see the average number of goals scored per match! */
+//  console.log(getAverageGoals(getFinals(fifaData)))
 
 
 
